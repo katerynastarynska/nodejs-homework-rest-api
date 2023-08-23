@@ -62,8 +62,8 @@
   {
     "id": "8gUUwLj7oywn56gBWnRxo",
     "name": "someone",
-    "email": "text@test.com",
-    "phone": "121212121212"
+    "email": "new@new.com",
+    "phone": "555555555"
   },
   {
     "id": "qYWKru9KSw0YpDsSjc09G",
@@ -79,8 +79,8 @@
   },
   {
     "id": "TF8RlulEFytGOJBN4yCDe",
-    "name": "ert",
+    "name": "newName",
     "email": "text@text.com",
-    "phone": "1234561234"
+    "phone": "345345345345"
   }
 ]

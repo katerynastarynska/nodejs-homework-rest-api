@@ -6,7 +6,6 @@ const { HttpError } = require('../helpers');
 
 const addSchema = Joi.object({
     name: Joi.string()
-        .alphanum()
         .min(2)
         .max(30)
         .required(),
@@ -14,6 +13,17 @@ const addSchema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
 
     phone: Joi.string().pattern(/^[0-9]{7,12}$/).required(),
+})
+
+const putSchema = Joi.object({
+    name: Joi.string()
+        .min(2)
+        .max(30)
+        .optional().allow(null, ''),
+
+    email: Joi.string().email({ minDomainSegments: 2 }).optional().allow(null, ''),
+
+    phone: Joi.string().pattern(/^[0-9]{7,12}$/).optional().allow(null, ''),
 })
 
 const getAll = async (req, res, next) => {
@@ -66,8 +76,9 @@ const deleteById = async (req, res, next) => {
     }
 }
 const updateById = async (req, res, next) => {
+    console.log(req.body)
     try {
-        const { error } = addSchema.validate(req.body);
+        const { error } = putSchema.validate(req.body);
         if (error) {
             throw HttpError(400, "missing fields");
         }
