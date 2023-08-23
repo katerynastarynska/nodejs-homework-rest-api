@@ -1,5 +1,7 @@
 const fs = require('fs/promises');
+
 const path = require("path");
+
 const { nanoid } = require("nanoid");
 
 const contactsPath = path.join(__dirname, "contacts.json");
@@ -12,7 +14,6 @@ const listContacts = async () => {
 const getContactById = async (id) => {
   const contacts = await listContacts();
   const contactById = contacts.find((contact) => contact.id === id);
-  console.log(contactById)
   return contactById || null;
 };
 
