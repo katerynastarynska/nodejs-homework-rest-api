@@ -15,22 +15,26 @@ const contactSchema = new Schema({
     favorite: {
         type: Boolean,
         default: false,
-    }
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+        required: true,
+      }
 },
     { versionKey: false });
 
 contactSchema.post("save", handleMongooseError);
 
 const phoneNumberPattern = /^(?:\(\d{3}\)[ ]*|\d{3}[ ]*|)[\d ]{7,12}$/;
+const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const addSchema = Joi.object({
     name: Joi.string()
         .min(2)
         .max(30)
         .required(),
-
-    email: Joi.string().email({ minDomainSegments: 2 }).required(),
-
+    email: Joi.string().pattern(emailPattern).required(),
     phone: Joi.string().pattern(phoneNumberPattern).required(),
     favorite: Joi.boolean().optional()
 })
