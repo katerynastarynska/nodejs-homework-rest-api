@@ -45,11 +45,16 @@ const loginSchema = Joi.object({
     password: Joi.string().required(),
 })
 
+const updateSubscriptionSchema = Joi.object({
+    subscription: Joi.string().valid(...subscriptionList).required(),
+})
+
 const User = model('user', userSchema);
 
 const schemas = {
     registerSchema,
-    loginSchema
+    loginSchema, 
+    updateSubscriptionSchema
 }
 
 module.exports = {

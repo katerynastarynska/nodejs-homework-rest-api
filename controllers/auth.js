@@ -33,6 +33,7 @@ const register = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
+    // console.log(req.user)
     try {
         const { error } = schemas.loginSchema.validate(req.body);
         if (error) {
@@ -51,6 +52,7 @@ const login = async (req, res, next) => {
         const payload = {
             id: user._id,
         }
+        // console.log(payload)
 
         const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
         await User.findByIdAndUpdate(user._id, { token })
@@ -81,10 +83,33 @@ const getCurrent = async (req, res, next) => {
 const logout = async (req, res, next) => {
     try {
         const { _id } = req.user;
-        await User.findByIdAndUpdate(_id, { token: null });
-        res.status(204);
+        const user = await User.findByIdAndUpdate(_id, { token: null });
+        if (!user) {
+            throw HttpError(401);
+        }
+        res.status(204).json({
+            message: "Logout success"
+        });
     } catch (error) {
         next(error);
+    }
+}
+
+const updateUserSubscription = async (req, res, next) => {
+    console.log("body", req.body)
+    try {
+        const { error } = schemas.updateSubscriptionSchema.validate(req.body);
+        if (error) {
+            throw HttpError(400, "Validation field error");
+        }
+        const { _id } = req.user;
+        const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
+        if (!user) {
+            throw HttpError(401);
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        next(error)
     }
 }
 
@@ -92,5 +117,6 @@ module.exports = {
     register,
     login,
     getCurrent,
-    logout
+    logout,
+    updateUserSubscription
 }
