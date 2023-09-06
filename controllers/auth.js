@@ -33,7 +33,6 @@ const register = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
-    // console.log(req.user)
     try {
         const { error } = schemas.loginSchema.validate(req.body);
         if (error) {
@@ -52,7 +51,6 @@ const login = async (req, res, next) => {
         const payload = {
             id: user._id,
         }
-        // console.log(payload)
 
         const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
         await User.findByIdAndUpdate(user._id, { token })
@@ -96,7 +94,6 @@ const logout = async (req, res, next) => {
 }
 
 const updateUserSubscription = async (req, res, next) => {
-    console.log("body", req.body)
     try {
         const { error } = schemas.updateSubscriptionSchema.validate(req.body);
         if (error) {

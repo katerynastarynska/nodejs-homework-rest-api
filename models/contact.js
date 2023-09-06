@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const Joi = require("joi");
-const handleMongooseError = require('../helpers/handleMongooseError')
+const { handleMongooseError } = require('../helpers');
+
 const contactSchema = new Schema({
     name: {
         type: String,
@@ -20,7 +21,7 @@ const contactSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'user',
         required: true,
-      }
+    }
 },
     { versionKey: false });
 
@@ -43,8 +44,7 @@ const putSchema = Joi.object({
     name: Joi.string()
         .min(2)
         .max(30)
-        .optional().allow(null, '')
-    ,
+        .optional().allow(null, ''),
 
     email: Joi.string().email({ minDomainSegments: 2 }).optional().allow(null, ''),
 
