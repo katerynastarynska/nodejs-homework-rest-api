@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
+const path = require('path');
+const Jimp = require('jimp');
 
 const { User } = require('../models/user');
 const { schemas } = require('../models/user');
@@ -7,6 +10,8 @@ const { schemas } = require('../models/user');
 const { HttpError } = require('../helpers');
 
 const { SECRET_KEY } = process.env;
+
+const avatarsDir = path.join(__dirname, "../", "public", "avatars")
 
 const register = async (req, res, next) => {
     try {
@@ -20,11 +25,14 @@ const register = async (req, res, next) => {
             throw HttpError(409, "Email in use")
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ ...req.body, password: hashedPassword });
+        const avatarURL = gravatar.url(email);
+
+        const newUser = await User.create({ ...req.body, password: hashedPassword, avatarURL });
         res.status(201).json({
             user: {
                 email: newUser.email,
-                subscription: newUser.subscription
+                subscription: newUser.subscription,
+                avatarURL: newUser.avatarURL
             }
         })
     } catch (error) {
@@ -110,10 +118,34 @@ const updateUserSubscription = async (req, res, next) => {
     }
 }
 
+const updateAvatar = async (req, res, next) => {
+
+    const { _id } = req.user;
+    const { path: tempUpload, originalname } = req.file;
+    const imageName = `${_id}_${originalname}`
+    try {
+        const resultUpload = path.join(avatarsDir, imageName);
+
+        const avatar = await Jimp.read(tempUpload);
+        avatar.resize(250, 250);
+        await avatar.writeAsync(resultUpload);
+
+        const avatarURL = path.join('avatars', imageName);
+        await User.findByIdAndUpdate(_id, { avatarURL });
+
+        res.json({
+            avatarURL,
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     register,
     login,
     getCurrent,
     logout,
-    updateUserSubscription
+    updateUserSubscription,
+    updateAvatar
 }
