@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const Joi = require("joi");
-const handleMongooseError = require('../helpers/handleMongooseError')
+
+const handleMongooseError = require('../helpers/handleMongooseError');
 
 const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const subscriptionList = ["starter", "pro", "business"];
@@ -24,6 +25,10 @@ const userSchema = new Schema({
     token: {
         type: String,
         default: null,
+    }, 
+    avatarURL: {
+        type: String,
+        required: true,
     }
 },
     { versionKey: false }
