@@ -48,6 +48,7 @@ const registerSchema = Joi.object({
 const loginSchema = Joi.object({
     email: Joi.string().pattern(emailPattern).required(),
     password: Joi.string().required(),
+    subscription: Joi.string().valid(...subscriptionList).required(),
 })
 
 const updateSubscriptionSchema = Joi.object({

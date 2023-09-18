@@ -46,7 +46,7 @@ const login = async (req, res, next) => {
         if (error) {
             throw HttpError(400, "Validation error");
         }
-        const { email, password } = req.body;
+        const { email, password, subscription } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
             throw HttpError(401, "Email or password is wrong");
@@ -65,7 +65,8 @@ const login = async (req, res, next) => {
         res.status(200).json({
             token,
             user: {
-                email
+                email,
+                subscription                
             }
         })
 
