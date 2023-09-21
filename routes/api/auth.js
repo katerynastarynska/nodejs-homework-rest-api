@@ -6,6 +6,10 @@ const controllers = require('../../controllers/auth');
 
 router.post('/register', controllers.register);
 
+router.get('/verify/:verificationToken', controllers.verifyEmail);
+
+router.post('/verify', controllers.resendVerificationEmail)
+
 router.post('/login', controllers.login);
 
 router.get('/current', validateToken, controllers.getCurrent);
