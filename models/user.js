@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const Joi = require("joi");
-const handleMongooseError = require('../helpers/handleMongooseError')
+
+const handleMongooseError = require('../helpers/handleMongooseError');
 
 const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const subscriptionList = ["starter", "pro", "business"];
@@ -24,7 +25,20 @@ const userSchema = new Schema({
     token: {
         type: String,
         default: null,
-    }
+    },
+    avatarURL: {
+        type: String,
+        required: true,
+    },
+    verify: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+        // required: [true, 'Verify token is required'],
+    },
+
 },
     { versionKey: false }
 )
@@ -37,19 +51,29 @@ const registerSchema = Joi.object({
     }),
     password: Joi.string().required(),
     subscription: Joi.string().valid(...subscriptionList),
-    token: Joi.string()
+    token: Joi.string(),
 });
 
 const loginSchema = Joi.object({
     email: Joi.string().pattern(emailPattern).required(),
     password: Joi.string().required(),
+    subscription: Joi.string().valid(...subscriptionList).required(),
+})
+const emailVerificationSchema = Joi.object({
+    email: Joi.string().pattern(emailPattern).required(),
+})
+
+const updateSubscriptionSchema = Joi.object({
+    subscription: Joi.string().valid(...subscriptionList).required(),
 })
 
 const User = model('user', userSchema);
 
 const schemas = {
     registerSchema,
-    loginSchema
+    loginSchema,
+    emailVerificationSchema,
+    updateSubscriptionSchema,
 }
 
 module.exports = {

@@ -25,7 +25,6 @@ async function sendEmail({ to, subject, html }) {
         },
     });
 
-
     const email = await transporter.sendMail({
         from: META_USER,
         to,
