@@ -20,8 +20,6 @@ async function sendEmail({ to, subject, html }) {
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-            // user: "9ebfb71cf5e7e9",
-            // pass: "966ba83f28ddfb",
             user: USER_EMAIL,
             pass: USER_PASSWORD,
         },
